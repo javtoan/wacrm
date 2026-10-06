@@ -126,7 +126,7 @@ export function ProfileForm() {
           .from('avatars')
           .upload(path, pendingAvatar, {
             cacheControl: '3600',
-            upsert: true,
+            upsert: false,
             contentType: pendingAvatar.type,
           });
         if (uploadError) {
