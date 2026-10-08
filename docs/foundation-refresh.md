@@ -60,49 +60,70 @@ keeps production promotion separate from validation.
 - [x] Run the remote database linter.
 - [x] Revoke every temporary and legacy access token used during setup.
 
-### 0.4 Staging runtime configuration — pending
+### 0.4 Staging runtime configuration — validated with known incidents
 
-- [ ] Select the staging application host and canonical staging URL.
-- [ ] Configure `NEXT_PUBLIC_SUPABASE_URL`.
-- [ ] Configure the Supabase public/anon key.
-- [ ] Configure the server-only Supabase service-role key.
-- [ ] Generate and store a staging-only `ENCRYPTION_KEY`.
-- [ ] Configure `NEXT_PUBLIC_SITE_URL` and the Spanish locale.
-- [ ] Keep Meta/WhatsApp disabled until its own integration gate.
-- [ ] Document secret ownership and rotation procedures.
+- [x] Select the staging application host and canonical staging URL.
+- [x] Configure `NEXT_PUBLIC_SUPABASE_URL`.
+- [x] Configure the Supabase public/anon key.
+- [x] Configure the server-only Supabase service-role key.
+- [x] Generate and store a staging-only `ENCRYPTION_KEY`.
+- [x] Configure `NEXT_PUBLIC_SITE_URL` and the Spanish locale.
+- [x] Keep Meta/WhatsApp disabled until its own integration gate.
+- [x] Document secret ownership and rotation procedures.
 
-### 0.5 Authentication baseline — pending
+Validation was completed in staging without recording secret values here.
+External Meta/WhatsApp delivery remains intentionally disabled and is not part
+of Foundation acceptance.
 
-- [ ] Set the Supabase Auth Site URL to the canonical staging URL.
-- [ ] Allow the staging and localhost callback URL patterns.
-- [ ] Verify sign-up and email confirmation.
-- [ ] Verify sign-in and sign-out.
-- [ ] Verify forgotten-password and reset-password flows.
-- [ ] Verify session persistence and protected-route redirects.
-- [ ] Verify account creation and first-owner membership.
+### 0.5 Authentication baseline — validated with known incidents
 
-### 0.6 Application smoke tests — pending
+- [x] Set the Supabase Auth Site URL to the canonical staging URL.
+- [x] Allow the staging and localhost callback URL patterns.
+- [x] Verify sign-up and email confirmation.
+- [x] Verify sign-in and sign-out.
+- [x] Verify forgotten-password and reset-password flows.
+- [x] Verify session persistence and protected-route redirects.
+- [x] Verify account creation and first-owner membership.
 
-- [ ] Deploy the current PR head to staging.
-- [ ] Load the dashboard without runtime errors.
-- [ ] Create and update a contact.
-- [ ] Create a pipeline and move a deal between stages.
-- [ ] Create a deterministic flow without enabling external delivery.
-- [ ] Create an automation in a non-delivery test configuration.
-- [ ] Verify account isolation with two test accounts.
-- [ ] Verify owner/admin/agent/viewer access boundaries.
-- [ ] Check browser console and server logs for unexpected errors.
+Authentication was validated on staging. Provider email limits and delivery
+remain staging operational constraints rather than production guarantees.
 
-### 0.7 Security and operational readiness — pending
+### 0.6 Application smoke tests — validated with known incidents
+
+- [x] Deploy the current PR head to staging.
+- [x] Load the dashboard without runtime errors.
+- [x] Create and update a contact.
+- [x] Create a pipeline and move a deal between stages.
+- [x] Create a deterministic flow without enabling external delivery.
+- [x] Create an automation in a non-delivery test configuration.
+- [x] Verify account isolation with two test accounts.
+- [x] Verify owner/admin/agent/viewer access boundaries.
+- [x] Check browser console and server logs for unexpected errors.
+
+Smoke tests were completed with outbound integrations disabled. Known
+non-blocking findings continue into Gate 0.7 and do not constitute a production
+readiness decision.
+
+### 0.7 Security and operational readiness — partial
 
 - [ ] Review Supabase Security Advisor findings.
 - [ ] Review Supabase Performance Advisor findings.
 - [ ] Resolve or formally accept every high-severity finding.
 - [ ] Confirm service-role secrets never reach client bundles or logs.
-- [ ] Establish staging backup/recovery expectations.
-- [ ] Document upstream sync and migration procedures.
-- [ ] Record the existing non-blocking SQL lint warning for
-  `transfer_account_ownership`.
+- [x] Establish staging backup/recovery expectations in
+      `docs/runbooks/staging-backup-recovery.md`.
+- [x] Document upstream sync and migration procedures.
+- [x] Record the existing non-blocking SQL lint warning for
+      `transfer_account_ownership`.
+
+The `vector` extension warning is accepted temporarily for Foundation because
+the RAG schema and queries depend on its present location. Moving it requires a
+dedicated migration and regression test. Migrations 043, 044, and 045 address
+function execution grants, public Storage listing, and function search paths.
+Backup creation and isolated recovery remain **NOT TESTED**: the current
+workstation has no Supabase CLI/PostgreSQL client, database credential, or
+approved encrypted destination. Gate 0.7 must not pass until an encrypted dump
+and isolated restore drill satisfy the runbook evidence checklist.
 
 ### 0.8 Foundation v1.0 promotion — approval required
 
@@ -124,6 +145,9 @@ keeps production promotion separate from validation.
 
 ## Next executable gate
 
-The next gate is **0.4 Staging runtime configuration**. It requires choosing a
-staging application host and canonical URL before Supabase Auth redirects and
-end-to-end authentication can be configured safely.
+The next executable work is **Gate 0.7 backup/recovery evidence**. Install the
+current Supabase CLI and PostgreSQL client, provide time-limited staging
+database access and an approved encrypted destination, create the logical and
+Storage backups, then restore only to an isolated target. Do not promote PR #1
+until that drill passes and the remaining advisor findings are resolved or
+formally accepted.
