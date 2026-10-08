@@ -39,6 +39,19 @@ yarn-error.log*
 # vercel
 .vercel
 
+# Supabase CLI local project state
+/supabase/.temp/
+
+# Database backups and restore artifacts must never be committed
+/backups/
+*.dump
+*.backup
+roles.sql
+schema.sql
+data.sql
+history_schema.sql
+history_data.sql
+
 # typescript
 *.tsbuildinfo
 next-env.d.ts
